@@ -1,0 +1,21 @@
+version: '3'
+services:
+  api-server:
+    container_name: node-svr
+    image: node-svr:1.0
+    build:
+      context: ./server
+    env_file:
+    - ./server/.env
+  react-client:
+    container_name: cra-client
+    image: react-client:1.0
+    build:
+      context: ./client
+    ports:
+    - "8080:80"
+  node-db:
+    container_name: node-react-db
+    image: node-react-db:1.0
+    build:
+      context: ./db
