@@ -19,7 +19,7 @@ describe('Root unit tests', () => {
             chai.request(app).get('/api').end((err, res) => {
                 expect(res.statusCode).to.equal(200);
                 expect(res.body).to.be.an('Object');
-                expect(res.body.text).to.equal('Hello world!!!');
+                expect(res.body.text).to.equal('Hello world!');
                 done(); 
             });
         })

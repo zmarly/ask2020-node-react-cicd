@@ -5,7 +5,7 @@ WORKDIR /home/node/app
 USER node
 
 COPY --chown=node:node package*.json ./
-RUN npm install
+RUN npm install --only=prod
 
 COPY --chown=node:node ./src ./src
 
