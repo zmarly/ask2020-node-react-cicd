@@ -24,7 +24,7 @@ jobs:
       - run:
           name: Running server tests
           command: run test
-          working_directory: ./serverclient
+          working_directory: ./client
 workflows:
     build-and-test:
       jobs:
