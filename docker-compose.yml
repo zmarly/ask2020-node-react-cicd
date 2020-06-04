@@ -19,3 +19,5 @@ services:
     image: node-react-db:1.0
     build:
       context: ./db
+    environment:
+      MYSQL_ROOT_PASSWORD: ZAQ12wsx
