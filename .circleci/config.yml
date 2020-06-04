@@ -2,46 +2,68 @@ version: 2.1
 orbs:
   node: circleci/node@2.1.0
 jobs:
-  build-and-test:
+  server-build-and-test:
     executor:
       name: node/default
     steps:
       - checkout
       - node/install-packages:
           app-dir: ./server
+      - run:
+          command: npm install
+          working_directory: ./server
+      - run:
+          name: Running server tests
+          command: npm test 
+          working_directory: ./server
+  client-build-and-test:
+    executor:
+      name: node/default
+    steps:
+      - checkout
       - node/install-packages:
           app-dir: ./client
       - run:
           command: npm install
-          working_directory: ./server
-      - run:
-          command: npm install
-          working_directory: ./client
-      - run:
-          name: Running server tests
-          command: npm test
-          working_directory: ./server
+          wokring_directory: ./client
       - run:
           name: Running client tests
-          command: npm test
+          command: npm test 
           working_directory: ./client
   publish-docker:
     machine: true
     steps:
       - checkout
       - run: echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-      - run:
+      - run: 
           name: Docker publish server
           command: |
             TAG=0.1.$CIRCLE_BUILD_NUM
             docker build -t zmarly/node-react-cicd-server:$TAG .
             docker push zmarly/node-react-cicd-server:$TAG
           working_directory: ./server
-     
+      - run: 
+          name: Docker publish client
+          command: |
+            TAG=0.1.$CIRCLE_BUILD_NUM
+            docker build -t zmarly/node-react-cicd-client:$TAG .
+            docker push zmarly/node-react-cicd-client:$TAG
+          working_directory: ./client
+        
 workflows:
     build-and-test:
       jobs:
-        - build-and-test
+        - client-build-and-test:
+          filters:
+            branches:
+              only:
+                - master
+        - server-build-and-test:
+          filters:
+            branches:
+              only:
+                - master
         - publish-docker:
             requires:
-              - build-and-test
+              - client-build-and-test
+              - server-build-and-test
