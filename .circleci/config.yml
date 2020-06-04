@@ -19,11 +19,11 @@ jobs:
           working_directory: ./client
       - run:
           name: Running server tests
-          command: run test
+          command: npm test
           working_directory: ./server
       - run:
           name: Running server tests
-          command: run test
+          command: npm test
           working_directory: ./client
 workflows:
     build-and-test:
